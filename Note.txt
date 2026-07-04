@@ -1,0 +1,76 @@
+ใช่ครับ แต่มีวิธีที่เป็นระเบียบกว่า และจะทำงานได้ง่ายในระยะยาว
+
+ครั้งแรกที่มหาวิทยาลัย
+
+สร้างโฟลเดอร์เหมือนที่บ้านก่อน เช่น
+
+C:\
+└── Users
+    └── Administrator
+        └── Desktop
+            └── Web.development
+                └── Home-Work-app
+
+แต่ ยังไม่ต้องสร้างโฟลเดอร์ Sirichaiprem เอง เพราะ Git จะสร้างให้
+
+เข้าไปที่
+
+C:\Users\Administrator\Desktop\Web.development\Home-Work-app
+
+จากนั้นเปิด Terminal แล้วใช้
+
+git clone https://github.com/Paprem39/php-homework-dashboard.git
+
+Git จะสร้างโฟลเดอร์
+
+php-homework-dashboard
+
+พร้อมไฟล์ทั้งหมดให้ทันที
+
+ถ้าคุณอยากให้ชื่อโฟลเดอร์เป็น Sirichaiprem ก็สามารถกำหนดตอน clone ได้เลย
+
+git clone https://github.com/Paprem39/php-homework-dashboard.git Sirichaiprem
+
+จะได้
+
+Home-Work-app
+└── Sirichaiprem
+    ├── index.php
+    ├── assets
+    ├── includes
+    └── ...
+
+ซึ่งเหมือนกับที่บ้าน
+
+หลังจาก Clone ครั้งแรกแล้ว
+
+ทุกครั้งที่ไปมหาวิทยาลัย
+
+เปิด VS Code ที่โฟลเดอร์
+
+Sirichaiprem
+
+แล้วรัน
+
+git pull
+
+เพื่อดึงโค้ดล่าสุดจาก GitHub
+
+ทำงานเสร็จ
+
+git add .
+git commit -m "Update homework"
+git push
+ที่บ้าน
+
+ก่อนเริ่มทำ ถ้ามีการแก้จากมหาวิทยาลัยมาก่อน
+
+git pull
+
+จากนั้นทำงาน
+
+เสร็จแล้ว
+
+git add .
+git commit -m "Continue homework"
+git push
