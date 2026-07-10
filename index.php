@@ -92,7 +92,7 @@
 
                 <h3>Homework 02</h3>
 
-                <p>-</p>
+                <p>Old/Event Number</p>
 
                 <i class="fa-solid fa-arrow-up-right-from-square"></i>
 
@@ -104,7 +104,7 @@
 
                 <h3>Homework 03</h3>
 
-                <p>-</p>
+                <p>Grade Calculator</p>
 
                 <i class="fa-solid fa-arrow-up-right-from-square"></i>
 
