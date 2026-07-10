@@ -1,84 +1,37 @@
-function calculate(){
+/* ===========================================
+   HOMEWORK COMMON FUNCTIONS
+=========================================== */
 
-    let num1 = parseFloat(document.getElementById("num1").value);
+// ---------- Popup ----------
 
-    let num2 = parseFloat(document.getElementById("num2").value);
+function openModal(message){
 
-    let op = document.getElementById("operator").value;
+    document.getElementById("resultText").innerHTML = message;
 
-
-    if(isNaN(num1) || isNaN(num2)){
-
-        document.getElementById("resultText").innerHTML =
-        "Please enter both numbers.";
-
-        document.getElementById("resultModal").style.display="flex";
-
-        return;
-
-    }
-
-    let result;
-
-    switch(op){
-
-        case "+":
-            result = num1 + num2;
-            break;
-
-        case "-":
-            result = num1 - num2;
-            break;
-
-        case "*":
-            result = num1 * num2;
-            break;
-
-        case "/":
-
-            if(num2==0){
-
-                document.getElementById("resultText").innerHTML =
-                "Cannot divide by zero";
-
-                document.getElementById("resultModal").style.display="flex";
-
-                return;
-
-            }
-
-            result = num1 / num2;
-
-            break;
-
-    }
-
-    document.getElementById("resultText").innerHTML =
-    `${num1} ${op} ${num2} = <br><br><span style="color:#ff0048">${result}</span>`;
-
-    document.getElementById("resultModal").style.display="flex";
+    document.getElementById("resultModal").style.display = "flex";
 
 }
-
 
 function closeModal(){
 
-    document.getElementById("resultModal").style.display="none";
+    document.getElementById("resultModal").style.display = "none";
 
 }
 
+// ---------- Back Home ----------
 
 function goHome(){
 
-    window.location.href="../index.php";
+    window.location.href = "../index.php";
 
 }
 
+// ---------- Assignment Done ----------
 
-function markDone(){
+function markDone(homework){
 
-    localStorage.setItem("hw1","done");
+    localStorage.setItem(homework,"done");
 
-    alert("Homework 01 Completed!");
+    alert(homework.toUpperCase() + " Completed!");
 
 }

@@ -31,6 +31,27 @@ if(localStorage.getItem("hw1") === "done"){
     document.getElementById("hw1-status").style.color = "#00ff88";
 
 }
+if(localStorage.getItem("hw2") === "done"){
+
+document.getElementById("hw2-status").innerHTML = "✔ DONE";
+
+document.getElementById("hw2-status").style.color = "#00ff88";
+
+}
+if(localStorage.getItem("hw3") === "done"){
+
+document.getElementById("hw3-status").innerHTML = "✔ DONE";
+
+document.getElementById("hw3-status").style.color = "#00ff88";
+
+}
+if(localStorage.getItem("hw4") === "done"){
+
+document.getElementById("hw4-status").innerHTML = "✔ DONE";
+
+document.getElementById("hw4-status").style.color = "#00ff88";
+
+}
 
 });
 

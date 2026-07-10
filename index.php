@@ -88,7 +88,7 @@
 
             <a href="homework/homework2.php" class="card">
 
-                <span></span>
+                <span id="hw2-status" class="hw-status"></span>
 
                 <h3>Homework 02</h3>
 
@@ -100,11 +100,11 @@
 
             <a href="homework/homework3.php" class="card">
 
-                <span></span>
+                <span id="hw3-status" class="hw-status"></span>
 
                 <h3>Homework 03</h3>
 
-                <p>Grade Calculator</p>
+                <p>Grade Student</p>
 
                 <i class="fa-solid fa-arrow-up-right-from-square"></i>
 
@@ -112,11 +112,13 @@
 
             <a href="homework/homework4.php" class="card">
 
+                <span id="hw4-status" class="hw-status"></span>
+
                 <span></span>
 
                 <h3>Homework 04</h3>
 
-                <p>-</p>
+                <p>Multiplication table</p>
 
                 <i class="fa-solid fa-arrow-up-right-from-square"></i>
 

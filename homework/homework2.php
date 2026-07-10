@@ -14,31 +14,31 @@
             
         </div>
           
-            <form method="post">
+        <form method="post">
 
-                <div class="form-group">
+            <div class="form-group">
 
-                    <label>Number</label>
+                <label>Number</label>
 
-                        <input
-                            type="number"
-                            name="num1"
-                            placeholder="Enter Number"
-                            required>
+                    <input
+                        type="number"
+                        id="num1"
+                        name="num1"
+                        placeholder="Enter Number"
+                        required>
 
-                </div>
+            </div>
 
-                <button type="submit" class="calculate-btn">
+            <button 
+                type="submit" class="calculate-btn">
 
                     <i class="fa-solid fa-calculator"></i>
+                    CHECK NUMBER
+            </button>
 
-                        CHECK NUMBER
+        </form>
 
-                </button>
-
-            </form>
-
-    <?php
+<?php
 
         $result = "";
 
@@ -61,11 +61,19 @@
     ?>
         <div class="button-group">
 
-            <button class="back-btn" onclick="goHome()">
+            <button type="button" class="back-btn" onclick="goHome()">
 
                 <i class="fa-solid fa-house"></i>
 
                 BACK HOME
+
+            </button>
+
+            <button class="done-btn" onclick="markDone('hw2')">
+
+                <i class="fa-solid fa-circle-check"></i>
+
+                ASSIGNMENT DONE
 
             </button>
 
@@ -104,23 +112,15 @@
 
 </div>
 
-<script src="../assets/js/homework.js?v=1"></script>
-
-<?php if($result != ""): ?>
-
+<!-- ================= ท้ายไฟล์ ================= --> 
 <script>
 
-document.addEventListener("DOMContentLoaded", function(){
-
-    document.getElementById("resultText").innerHTML =
-        "<?= $result ?>";
-
-    document.getElementById("resultModal").style.display = "flex";
-
-});
+const homeworkResult = <?= json_encode($result) ?>;
 
 </script>
 
-<?php endif; ?>
+<script src="../assets/js/homework.js"></script>
+<script src="../assets/js/homework02.js"></script>
 
+<!-- ================= เรียก footer มาทำงานทุกไฟล์ ================= --> 
 <?php include "../components/footer.php"; ?>
