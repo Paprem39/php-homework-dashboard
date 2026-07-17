@@ -126,11 +126,13 @@
 
             <a href="homework/homework5.php" class="card">
 
+                <span id="hw5-status" class="hw-status"></span>
+
                 <span></span>
 
                 <h3>Homework 05</h3>
 
-                <p>-</p>
+                <p>Min Max AVERAGE</p>
 
                 <i class="fa-solid fa-arrow-up-right-from-square"></i>
 

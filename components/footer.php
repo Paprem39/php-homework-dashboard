@@ -52,6 +52,13 @@ document.getElementById("hw4-status").innerHTML = "✔ DONE";
 document.getElementById("hw4-status").style.color = "#00ff88";
 
 }
+if(localStorage.getItem("hw5") === "done"){
+
+document.getElementById("hw5-status").innerHTML = "✔ DONE";
+
+document.getElementById("hw5-status").style.color = "#00ff88";
+
+}
 
 });
 
