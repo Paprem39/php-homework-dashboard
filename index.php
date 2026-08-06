@@ -132,11 +132,26 @@
 
                 <h3>Homework 05</h3>
 
-                <p>Min Max AVERAGE</p>
+                <p>Read To text file</p>
 
                 <i class="fa-solid fa-arrow-up-right-from-square"></i>
 
             </a>
+
+            <a href="homework/homework6.php" class="card">
+
+                <span id="hw6-status" class="hw-status"></span>
+
+                <span></span>
+
+                <h3>Homework 06</h3>
+
+                <p>Upload file.jpg/.png</p>
+
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+
+            </a>
+
 
         </div>
 
