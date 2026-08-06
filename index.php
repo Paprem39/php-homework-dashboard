@@ -1,6 +1,12 @@
 
 <?php include "components/header.php"; ?>
 
+    <div class="main-layout">
+
+    <?php include "components/sidebar.php"; ?>
+
+    <main class="content">
+
     <!-- ================= PROFILE ================= -->
 
     <section class="profile">
@@ -155,9 +161,13 @@
 
         </div>
 
-    </section>
+        </section>
 
-    <?php include "components/footer.php"; ?>
+            </main>
+
+        </div>
+
+        <?php include "components/footer.php"; ?>
 
 
     
