@@ -18,20 +18,3 @@ function closeModal(){
 
 }
 
-// ---------- Back Home ----------
-
-function goHome(){
-
-    window.location.href = "../index.php";
-
-}
-
-// ---------- Assignment Done ----------
-
-function markDone(homework){
-
-    localStorage.setItem(homework,"done");
-
-    alert(homework.toUpperCase() + " Completed!");
-
-}

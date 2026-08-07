@@ -23,6 +23,7 @@ if (strpos($_SERVER['PHP_SELF'], '/homework/') !== false) {
 
     <!-- CSS -->
     <link rel="stylesheet" href="<?= $basePath ?>assets/css/style.css">
+    <link rel="stylesheet" href="<?= $basePath ?>assets/css/homework.css">
 
     <!-- Font Awesome -->
     <link rel="stylesheet"

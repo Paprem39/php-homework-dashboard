@@ -11,7 +11,7 @@
             <span>Home</span>
         </a>
 
-        <a href="/Sirichaiprem/homework/homework1.php" class="menu-item">
+        <a href="index.php?page=hw1" class="menu-item">
 
             <i class="fa-solid fa-file-code"></i>
 
@@ -25,7 +25,7 @@
 
         </a>
 
-        <a href="/Sirichaiprem/homework/homework2.php" class="menu-item">
+        <a href="index.php?page=hw2" class="menu-item">
 
             <i class="fa-solid fa-file-code"></i>
 
@@ -39,7 +39,7 @@
 
         </a>
 
-        <a href="/Sirichaiprem/homework/homework3.php" class="menu-item">
+        <a href="index.php?page=hw3" class="menu-item">
 
             <i class="fa-solid fa-file-code"></i>
 
@@ -53,7 +53,7 @@
 
         </a>
 
-        <a href="/Sirichaiprem/homework/homework4.php" class="menu-item">
+        <a href="index.php?page=hw4" class="menu-item">
 
             <i class="fa-solid fa-file-code"></i>
 
@@ -67,7 +67,7 @@
 
         </a>
 
-        <a href="/Sirichaiprem/homework/homework5.php" class="menu-item">
+        <a href="index.php?page=hw5" class="menu-item">
 
             <i class="fa-solid fa-file-code"></i>
 
@@ -81,7 +81,7 @@
 
         </a>
 
-        <a href="/Sirichaiprem/homework/homework6.php" class="menu-item">
+        <a href="index.php?page=hw6" class="menu-item">
 
             <i class="fa-solid fa-file-code"></i>
 
