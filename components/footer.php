@@ -2,17 +2,47 @@
 
 <footer>
 
-<h3>WEB PROGRAMMING LABORATORY</h3>
-
-<p>
-
     Developed by
-
     <strong>Sirichai Paisitvorakun</strong>
 
-</p>
-
 </footer>
+
+<script src="assets/js/app.js"></script>
+<script src="assets/js/homework.js"></script>
+
+<?php
+
+$page = $_GET["page"] ?? "dashboard";
+
+switch ($page) {
+
+    case "hw1":
+        echo '<script src="assets/js/homework01.js"></script>';
+        break;
+
+    case "hw2":
+        echo '<script src="assets/js/homework02.js"></script>';
+        break;
+
+    case "hw3":
+        echo '<script src="assets/js/homework03.js"></script>';
+        break;
+
+    case "hw4":
+        echo '<script src="assets/js/homework04.js"></script>';
+        break;
+
+    case "hw5":
+        echo '<script src="assets/js/homework05.js"></script>';
+        break;
+
+    case "hw6":
+        echo '<script src="assets/js/homework06.js"></script>';
+        break;
+
+}
+
+?>
 
 
 
