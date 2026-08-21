@@ -1,8 +1,10 @@
-document.addEventListener("DOMContentLoaded",()=>{
+document.addEventListener("DOMContentLoaded", function () {
 
-    if(homeworkResult !== ""){
+    if (homeworkResult) {
 
-        openModal(homeworkResult);
+        document.getElementById("resultText").innerHTML = homeworkResult;
+
+        document.getElementById("resultModal").style.display = "flex";
 
     }
 
