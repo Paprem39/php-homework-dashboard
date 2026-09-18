@@ -25,11 +25,11 @@ switch ($page) {
         break;
 
     case "hw3":
-        echo '<script src="assets/js/homework03.js"></script>';
+        echo '<script src="assets/js/homework03.js?v=2"></script>';
         break;
 
     case "hw4":
-        echo '<script src="assets/js/homework04.js"></script>';
+        echo '<script src="assets/js/homework04.js?v=2"></script>';
         break;
 
     case "hw5":
