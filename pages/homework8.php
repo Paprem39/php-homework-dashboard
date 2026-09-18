@@ -1,4 +1,5 @@
 <?php
+
 // กำหนดค่าการเชื่อมต่อฐานข้อมูล (ใช้ตัวแปร $conn ร่วมกับโปรเจคหลัก)
 $servername = "localhost";
 $username = "root";
@@ -21,13 +22,16 @@ try {
 
         $stmt_member = $conn->prepare("SELECT * FROM member WHERE user = :user");
         $stmt_member->execute([':user' => $input_user]);
-        $member_row = $stmt_member->fetch(PDO::FETCH_ASSOC);
+        $member_row = $stmt_member->fetch(PDO::FETCH_ASSOC); 
 
         if ($member_row && $input_pass === $member_row['password']) {
             $_SESSION['role'] = $member_row['role']; 
             $_SESSION['username'] = $member_row['user'];
-            header("Location: index.php?page=hw8&login=success");
+
+            // เคลียร์ค่าและบังคับเปลี่ยนหน้าทันทีด้วย JavaScript ร่วมกับ PHP เพื่อไม่ให้เบราว์เซอร์ค้างหมุน
+            echo '<script>window.location.href = "index.php?page=hw8&login=success";</script>';
             exit();
+
         } else {
             $login_error = "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง";
         }
@@ -37,7 +41,7 @@ try {
     if (isset($_GET['action']) && $_GET['action'] === 'logout') {
         unset($_SESSION['role']);
         unset($_SESSION['username']);
-        header("Location: index.php?page=hw8");
+        echo '<script>window.location.href = "index.php?page=hw8";</script>';
         exit();
     }
 
@@ -64,7 +68,7 @@ try {
             ':birthday' => $birthday
         ]);
 
-        header("Location: index.php?page=hw8");
+        echo '<script>window.location.href = "index.php?page=hw8&success=added";</script>';
         exit();
     }
 
@@ -90,7 +94,7 @@ try {
             ':employee_id' => $employee_id
         ]);
 
-        header("Location: index.php?page=hw8");
+        echo '<script>window.location.href = "index.php?page=hw8&success=updated";</script>';
         exit();
     }
 
@@ -101,7 +105,7 @@ try {
         $stmt_delete = $conn->prepare($delete_sql);
         $stmt_delete->execute([':employee_id' => $employee_id]);
 
-        header("Location: index.php?page=hw8");
+        echo '<script>window.location.href = "index.php?page=hw8&success=updated";</script>';
         exit();
     }
 
@@ -137,12 +141,16 @@ try {
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 15px;">
             <div>
                 <h2 style="color: #fff; margin: 0 0 5px 0;">👥 Homework 08: Employee Management</h2>
+                <br>
                 <p style="color: #aaa; margin: 0; font-size: 0.9rem;">ระบบจัดการข้อมูลพนักงานพร้อมระบบสิทธิ์ผู้ใช้งาน (Admin / User)</p>
             </div>
-            <div class="user-status">
+            <div class="user-status" style="display: flex; align-items: center; gap: 12px; white-space: nowrap;">
                 <?php if (isset($_SESSION['role'])) { ?>
-                    <span style="font-size: 14px; color: #ccc;">เข้าสู่ระบบเป็น: <strong style="color: #fff;"><?= htmlspecialchars($_SESSION['username']); ?></strong> (<?= strtoupper($_SESSION['role']); ?>)</span>
-                    <a href="index.php?page=hw8&action=logout" class="btn btn-secondary btn-sm" style="background: #6c757d; color: white; padding: 5px 12px; border-radius: 4px; text-decoration: none; font-size: 12px;">ออกจากระบบ</a>
+                    <span style="font-size: 14px; color: #ccc;">
+                        เข้าสู่ระบบเป็น: <strong style="color: #fff;"><?= htmlspecialchars($_SESSION['username']); ?></strong> 
+                        <span style="background: #007bff; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 11px; margin-left: 4px;"><?= strtoupper($_SESSION['role']); ?></span>
+                    </span>
+                    <a href="index.php?page=hw8&action=logout" style="background: linear-gradient(135deg, #ff416c, #ff4b2b); color: white; padding: 6px 14px; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: bold; box-shadow: 0 2px 5px rgba(255,65,108,0.3); transition: 0.2s;">🚪 ออกจากระบบ</a>
                 <?php } else { ?>
                     <button class="btn btn-primary btn-sm" onclick="openLoginModal()" style="background: #007bff; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer;">🔑 เข้าสู่ระบบ (Login)</button>
                 <?php } ?>
@@ -175,13 +183,13 @@ try {
             <table style="width: 100%; border-collapse: collapse; background-color: #222; color: #ddd; font-size: 0.9rem;">
                 <thead>
                     <tr style="background-color: #333; color: #fff;">
-                        <th style="padding: 10px; border: 1px solid #444; text-align: center;">ID</th>
-                        <th style="padding: 10px; border: 1px solid #444; text-align: left;">Full Name</th>
-                        <th style="padding: 10px; border: 1px solid #444; text-align: center;">Gender</th>
-                        <th style="padding: 10px; border: 1px solid #444; text-align: left;">Position</th>
-                        <th style="padding: 10px; border: 1px solid #444; text-align: right;">Salary</th>
-                        <th style="padding: 10px; border: 1px solid #444; text-align: left;">Email</th>
-                        <th style="padding: 10px; border: 1px solid #444; text-align: center;">Birthday</th>
+                        <th style="padding: 10px; border: 1px solid #444; text-align: center;">รหัสพนักงาน</th>
+                        <th style="padding: 10px; border: 1px solid #444; text-align: left;">ชื่อ-สกุล</th>
+                        <th style="padding: 10px; border: 1px solid #444; text-align: center;">เพศ</th>
+                        <th style="padding: 10px; border: 1px solid #444; text-align: left;">ตำแหน่ง</th>
+                        <th style="padding: 10px; border: 1px solid #444; text-align: right;">เงินเดือน</th>
+                        <th style="padding: 10px; border: 1px solid #444; text-align: left;">อีเมลล์</th>
+                        <th style="padding: 10px; border: 1px solid #444; text-align: center;">วันเกิด</th>
                         <?php if ($is_admin) { ?>
                             <th style="padding: 10px; border: 1px solid #444; text-align: center;">จัดการ</th>
                         <?php } ?>
@@ -242,7 +250,7 @@ try {
                     </div>
                 <?php } ?>
 
-                <form method="POST" action="index.php?page=hw8">
+                <form method="POST" action="index.php?page=hw8" onsubmit="setTimeout(function(){ window.location.href='index.php?page=hw8'; }, 300);">
                     <input type="hidden" name="action" value="login">
                     
                     <div style="margin-bottom: 12px;">

@@ -1,3 +1,10 @@
+<?php
+// เปิด Session ไว้ที่บรรทัดแรกสุดของโปรเจกต์หลัก เพื่อให้ใช้ได้ทุกหน้า
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+?>
+
 <?php include "components/header.php"; ?>
 
 <div class="main-layout">
