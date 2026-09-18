@@ -36,6 +36,14 @@
                 include "pages/homework6.php";
                 break;
 
+            case "hw7":
+                include "pages/homework7.php";
+                break;
+
+            case "hw8":
+                include "pages/homework8.php";
+                break;
+
             case "about":
                 include "pages/about.php";
                 break;

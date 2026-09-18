@@ -95,6 +95,34 @@
 
         </a>
 
+        <a href="index.php?page=hw7" class="menu-item">
+
+            <i class="fa-solid fa-file-code"></i>
+
+            <div class="menu-text">
+
+                <span class="menu-title">Homework 07</span>
+
+                <small class="menu-desc">Convert the search criteria to: SQL</small>
+
+            </div>
+
+        </a>
+
+        <a href="index.php?page=hw8" class="menu-item">
+
+            <i class="fa-solid fa-file-code"></i>
+
+            <div class="menu-text">
+
+                <span class="menu-title">Homework 08</span>
+
+                <small class="menu-desc">Add insert search And role to: SQL</small>
+
+            </div>
+
+        </a>
+
         <a href="#" class="menu-item">
             <i class="fa-solid fa-circle-info"></i>
             <span>About</span>

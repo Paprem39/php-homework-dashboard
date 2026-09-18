@@ -40,6 +40,10 @@ switch ($page) {
         echo '<script src="assets/js/homework06.js"></script>';
         break;
 
+    case "hw7":
+        echo '<script src="assets/js/homework07.js"></script>';
+        break;
+
 }
 
 ?>

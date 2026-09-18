@@ -1,4 +1,7 @@
 <?php
+// เริ่มต้นใช้งาน Session สำหรับเก็บสถานะ Login
+session_start();
+
 $servername = "localhost";
 $username = "root";
 $password = ""; 
@@ -8,8 +11,40 @@ try {
     $conn = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // จัดการบันทึกข้อมูลเมื่อเพิ่มพนักงานใหม่
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add_employee') {
+    $login_error = "";
+
+    // จัดการระบบ Login เชื่อมกับตาราง member ในฐานข้อมูลจริง
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'login') {
+        $input_user = trim($_POST['login_username']);
+        $input_pass = trim($_POST['login_password']);
+
+        $stmt_member = $conn->prepare("SELECT * FROM member WHERE user = :user");
+        $stmt_member->execute([':user' => $input_user]);
+        $member_row = $stmt_member->fetch(PDO::FETCH_ASSOC);
+
+        // ตรวจสอบรหัสผ่าน (เทียบกับรหัสผ่านในตาราง member เช่น cet123456)
+        if ($member_row && $input_pass === $member_row['password']) {
+            $_SESSION['role'] = $member_row['role']; 
+            $_SESSION['username'] = $member_row['user'];
+            header("Location: " . $_SERVER['PHP_SELF'] . "?login=success");
+            exit();
+        } else {
+            $login_error = "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง";
+        }
+    }
+
+    // จัดการระบบ Logout
+    if (isset($_GET['action']) && $_GET['action'] === 'logout') {
+        session_destroy();
+        header("Location: " . strtok($_SERVER['REQUEST_URI'], '?'));
+        exit();
+    }
+
+    // ตรวจสอบสิทธิ์ว่าเป็น Admin หรือไม่
+    $is_admin = isset($_SESSION['role']) && strtolower($_SESSION['role']) === 'admin';
+
+    // จัดการเพิ่มพนักงาน (เฉพาะ Admin)
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add_employee' && $is_admin) {
         $full_name = trim($_POST['Full_name']);
         $gender = trim($_POST['Gender']);
         $position = trim($_POST['Position']);
@@ -32,8 +67,8 @@ try {
         exit();
     }
 
-    // จัดการอัปเดตข้อมูลพนักงาน (แก้ไข)
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'edit_employee') {
+    // จัดการแก้ไขพนักงาน (เฉพาะ Admin)
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'edit_employee' && $is_admin) {
         $employee_id = $_POST['Employee_id'];
         $full_name = trim($_POST['Full_name']);
         $gender = trim($_POST['Gender']);
@@ -58,10 +93,9 @@ try {
         exit();
     }
 
-    // จัดการลบข้อมูลพนักงาน
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete_employee') {
+    // จัดการลบพนักงาน (เฉพาะ Admin)
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete_employee' && $is_admin) {
         $employee_id = $_POST['Employee_id'];
-
         $delete_sql = "DELETE FROM employees WHERE Employee_id = :employee_id";
         $stmt_delete = $conn->prepare($delete_sql);
         $stmt_delete->execute([':employee_id' => $employee_id]);
@@ -70,9 +104,8 @@ try {
         exit();
     }
 
-    // รับค่าคำค้นหาจากฟอร์ม (ถ้ามี)
+    // ค้นหาข้อมูลพนักงาน
     $search = isset($_GET['search']) ? trim($_GET['search']) : '';
-
     if ($search !== '') {
         $sql = "SELECT * FROM employees WHERE 
                 Employee_id LIKE :search OR 
@@ -198,7 +231,7 @@ try {
             background-color: #fff;
             padding: 25px;
             border-radius: 8px;
-            width: 400px;
+            width: 380px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
             position: relative;
         }
@@ -241,22 +274,39 @@ try {
         }
         .close-btn:hover { color: #000; }
         
-        .delete-text {
-            font-size: 15px;
-            color: #333;
-            line-height: 1.5;
-            margin-bottom: 10px;
+        .alert-box {
+            padding: 10px 15px;
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-size: 14px;
         }
-        .delete-subtext {
-            font-size: 13px;
-            color: #dc3545;
-            font-weight: 500;
+        .user-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
     </style>
 </head>
 <body>
 
-    <h2>รายชื่อพนักงาน (Employees)</h2>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h2>รายชื่อพนักงาน (Employees)</h2>
+        <div class="user-status">
+            <?php if (isset($_SESSION['role'])) { ?>
+                <span style="font-size: 14px; color: #555;">เข้าสู่ระบบในฐานะ: <strong><?= htmlspecialchars($_SESSION['username']); ?></strong> (<?= strtoupper($_SESSION['role']); ?>)</span>
+                <a href="?action=logout" class="btn btn-secondary btn-sm">ออกจากระบบ</a>
+            <?php } else { ?>
+                <button class="btn btn-primary btn-sm" onclick="openLoginModal()">🔑 เข้าสู่ระบบ (Login)</button>
+            <?php } ?>
+        </div>
+    </div>
+
+    <?php if (isset($_GET['login']) && $_GET['login'] === 'success') { ?>
+        <div class="alert-box">เข้าสู่ระบบสำเร็จ! เข้าใช้งานตามสิทธิ์เรียบร้อยแล้ว</div>
+    <?php } ?>
 
     <div class="top-actions">
         <div class="search-container">
@@ -269,7 +319,9 @@ try {
             </form>
         </div>
         <div>
-            <button class="btn btn-success" onclick="openAddModal()">+ เพิ่มพนักงานใหม่</button>
+            <?php if ($is_admin) { ?>
+                <button class="btn btn-success" onclick="openAddModal()">+ เพิ่มพนักงานใหม่</button>
+            <?php } ?>
         </div>
     </div>
 
@@ -283,7 +335,9 @@ try {
                 <th>Salary</th>
                 <th>Email</th>
                 <th>Birthday</th>
-                <th class="text-center">จัดการ</th>
+                <?php if ($is_admin) { ?>
+                    <th class="text-center">จัดการ</th>
+                <?php } ?>
             </tr>
         </thead>
         <tbody>
@@ -297,33 +351,69 @@ try {
                         <td class="text-right"><?= number_format($row["Salary"]); ?></td>
                         <td><?= htmlspecialchars($row["Email"]); ?></td>
                         <td class="text-center"><?= htmlspecialchars($row["Birthday"]); ?></td>
-                        <td class="text-center" style="display: flex; gap: 5px; justify-content: center;">
-                            <button class="btn btn-warning btn-sm" onclick="openEditModal(
-                                '<?= htmlspecialchars($row['Employee_id'], ENT_QUOTES); ?>',
-                                '<?= htmlspecialchars($row['Full_name'], ENT_QUOTES); ?>',
-                                '<?= htmlspecialchars($row['Gender'], ENT_QUOTES); ?>',
-                                '<?= htmlspecialchars($row['Position'], ENT_QUOTES); ?>',
-                                '<?= htmlspecialchars($row['Salary'], ENT_QUOTES); ?>',
-                                '<?= htmlspecialchars($row['Email'], ENT_QUOTES); ?>',
-                                '<?= htmlspecialchars($row['Birthday'], ENT_QUOTES); ?>'
-                            )">แก้ไข</button>
-                            
-                            <button class="btn btn-danger btn-sm" onclick="openDeleteModal(
-                                '<?= htmlspecialchars($row['Employee_id'], ENT_QUOTES); ?>',
-                                '<?= htmlspecialchars($row['Full_name'], ENT_QUOTES); ?>'
-                            )">ลบ</button>
-                        </td>
+                        
+                        <?php if ($is_admin) { ?>
+                            <td class="text-center" style="display: flex; gap: 5px; justify-content: center;">
+                                <button class="btn btn-warning btn-sm" onclick="openEditModal(
+                                    '<?= htmlspecialchars($row['Employee_id'], ENT_QUOTES); ?>',
+                                    '<?= htmlspecialchars($row['Full_name'], ENT_QUOTES); ?>',
+                                    '<?= htmlspecialchars($row['Gender'], ENT_QUOTES); ?>',
+                                    '<?= htmlspecialchars($row['Position'], ENT_QUOTES); ?>',
+                                    '<?= htmlspecialchars($row['Salary'], ENT_QUOTES); ?>',
+                                    '<?= htmlspecialchars($row['Email'], ENT_QUOTES); ?>',
+                                    '<?= htmlspecialchars($row['Birthday'], ENT_QUOTES); ?>'
+                                )">แก้ไข</button>
+                                
+                                <button class="btn btn-danger btn-sm" onclick="openDeleteModal(
+                                    '<?= htmlspecialchars($row['Employee_id'], ENT_QUOTES); ?>',
+                                    '<?= htmlspecialchars($row['Full_name'], ENT_QUOTES); ?>'
+                                )">ลบ</button>
+                            </td>
+                        <?php } ?>
                     </tr>
                 <?php } ?>
             <?php } else { ?>
                 <tr>
-                    <td colspan="8" style="text-align: center; padding: 20px; color: #777;">ไม่พบข้อมูลพนักงาน</td>
+                    <td colspan="<?= $is_admin ? 8 : 7 ?>" style="text-align: center; padding: 20px; color: #777;">ไม่พบข้อมูลพนักงาน</td>
                 </tr>
             <?php } ?>
         </tbody>
     </table>
 
-    <!-- Modal Popup เพิ่มข้อมูล -->
+    <!-- Modal Popup สำหรับ Login -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeLoginModal()">&times;</span>
+            <div class="modal-header">เข้าสู่ระบบ (Login)</div>
+            
+            <?php if (!empty($login_error)) { ?>
+                <div style="background-color: #f8d7da; color: #721c24; padding: 8px 12px; border-radius: 4px; margin-bottom: 12px; font-size: 13px; border: 1px solid #f5c6cb;">
+                    <?= $login_error; ?>
+                </div>
+            <?php } ?>
+
+            <form method="POST" action="">
+                <input type="hidden" name="action" value="login">
+                
+                <div class="form-group">
+                    <label>ชื่อผู้ใช้งาน (Username)</label>
+                    <input type="text" name="login_username" placeholder="เช่น admin หรือ user" required>
+                </div>
+                <div class="form-group">
+                    <label>รหัสผ่าน (Password)</label>
+                    <input type="password" name="login_password" placeholder="เช่น cet123456" required>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeLoginModal()">ยกเลิก</button>
+                    <button type="submit" class="btn btn-primary">เข้าสู่ระบบ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Popup เพิ่มพนักงาน -->
+    <?php if ($is_admin) { ?>
     <div id="addModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeAddModal()">&times;</span>
@@ -370,7 +460,7 @@ try {
         </div>
     </div>
 
-    <!-- Modal Popup แก้ไขข้อมูล -->
+    <!-- Modal Popup แก้ไขพนักงาน -->
     <div id="editModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeEditModal()">&times;</span>
@@ -418,7 +508,7 @@ try {
         </div>
     </div>
 
-    <!-- Modal Popup ยืนยันการลบ (ดีไซน์สวยงาม) -->
+    <!-- Modal Popup ลบพนักงาน -->
     <div id="deleteModal" class="modal">
         <div class="modal-content" style="width: 350px;">
             <span class="close-btn" onclick="closeDeleteModal()">&times;</span>
@@ -427,10 +517,9 @@ try {
                 <input type="hidden" name="action" value="delete_employee">
                 <input type="hidden" name="Employee_id" id="delete_employee_id">
                 
-                <div class="delete-text">
+                <div style="font-size: 15px; color: #333; line-height: 1.5; margin-bottom: 10px;">
                     คุณต้องการลบข้อมูลพนักงานคนนี้ <br>
                     <strong id="delete_employee_name" style="color: #000;"></strong> ใช่หรือไม่?
-                    <div class="delete-subtext" style="margin-top: 8px;">* เมื่อลบแล้วจะไม่สามารถกู้คืนข้อมูลได้</div>
                 </div>
 
                 <div class="modal-footer">
@@ -440,15 +529,24 @@ try {
             </form>
         </div>
     </div>
+    <?php } ?>
 
     <!-- JavaScript ควบคุม Modal -->
     <script>
-        function openAddModal() {
-            document.getElementById('addModal').style.display = 'flex';
+        function openLoginModal() {
+            document.getElementById('loginModal').style.display = 'flex';
         }
-        function closeAddModal() {
-            document.getElementById('addModal').style.display = 'none';
+        function closeLoginModal() {
+            document.getElementById('loginModal').style.display = 'none';
         }
+
+        // หากกรอกรหัสผ่านผิด ให้เปิด Modal Login ค้างไว้อัตโนมัติ
+        <?php if (!empty($login_error)) { ?>
+            window.onload = function() { openLoginModal(); };
+        <?php } ?>
+
+        function openAddModal() { document.getElementById('addModal').style.display = 'flex'; }
+        function closeAddModal() { document.getElementById('addModal').style.display = 'none'; }
 
         function openEditModal(id, fullName, gender, position, salary, email, birthday) {
             document.getElementById('edit_employee_id').value = id;
@@ -458,21 +556,16 @@ try {
             document.getElementById('edit_salary').value = salary;
             document.getElementById('edit_email').value = email;
             document.getElementById('edit_birthday').value = birthday;
-            
             document.getElementById('editModal').style.display = 'flex';
         }
-        function closeEditModal() {
-            document.getElementById('editModal').style.display = 'none';
-        }
+        function closeEditModal() { document.getElementById('editModal').style.display = 'none'; }
 
         function openDeleteModal(id, fullName) {
             document.getElementById('delete_employee_id').value = id;
             document.getElementById('delete_employee_name').innerText = fullName + ' (ID: ' + id + ')';
             document.getElementById('deleteModal').style.display = 'flex';
         }
-        function closeDeleteModal() {
-            document.getElementById('deleteModal').style.display = 'none';
-        }
+        function closeDeleteModal() { document.getElementById('deleteModal').style.display = 'none'; }
     </script>
 </body>
 </html>
